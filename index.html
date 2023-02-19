@@ -29,7 +29,7 @@
     }
     socket.on('newMessage',(data)=>{
         if(user){
-            document.getElementById('messages').innerHTML += '<div><b>'+data.user+'</b>'+data.msg+'</div>';
+            document.getElementById('messages').innerHTML += '<div><b>'+data.user+" : "+'</b>'+data.msg+'</div>';
         }
     })
 </script>
