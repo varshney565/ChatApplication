@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat App</title>
+</head>
+<script src = "/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+    function setUserName(){
+        socket.emit('setUserName',document.getElementById('textMessage').value)
+    }
+    var user;
+    socket.on('userExists',(data)=>{
+        document.body.innerHTML = '<div id="error-container"></div>';
+        document.getElementById('error-container').innerHTML = data;
+    })
+    socket.on('userAllowed',(data)=>{
+        user = data.userName;
+        document.body.innerHTML = '<input type="text" placeholder="Enter message !!" id="textMessage"></input><button id="button" onclick="sendMesssage()">send</button><div id="messages"></div>'
+    });
+    function sendMesssage(){
+        var msg = document.getElementById('textMessage').value;
+        if(msg){
+            socket.emit('sendMessage',{
+                msg : msg,
+                user : user    
+            })
+        }
+    }
+    socket.on('newMessage',(data)=>{
+        if(user){
+            document.getElementById('messages').innerHTML += '<div><b>'+data.user+'</b>'+data.msg+'</div>';
+        }
+    })
+</script>
+<body>
+    <div id="error-container"></div>
+    <input type="text" placeholder="Enter Name !!" id="textMessage"></input>
+    <button id="button" onclick="setUserName()">Allow me to chat</button>
+</body>
+</html>
